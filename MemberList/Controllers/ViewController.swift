@@ -29,6 +29,8 @@ final class ViewController: UIViewController {
         //❗️
         tableView.dataSource = self
         
+        tableView.delegate = self
+        
         tableView.rowHeight = 60
         
         tableView.register(MyTableViewCell.self, forCellReuseIdentifier: "MemberCell")
@@ -91,6 +93,21 @@ extension ViewController: UITableViewDataSource {
         
         //return UITableViewCell() //temporary return value
         return cell
+    }
+    
+}
+
+extension ViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //code which leads to another view
+        let detailVC = DetailViewController()
+        
+        //pass datas of selected member's info to the next view
+        let array = memberListManager.getMemberList()
+        detailVC.member = array[indexPath.row]
+        
+        navigationController?.pushViewController(detailVC, animated: true)
     }
     
 }
