@@ -25,6 +25,13 @@ final class ViewController: UIViewController {
         setupTableViewConstraints()
     }
     
+    //if member's datas are updated, reload the view and implement those 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
+    }
+    
     func setupTableView() {
         //❗️
         tableView.dataSource = self
