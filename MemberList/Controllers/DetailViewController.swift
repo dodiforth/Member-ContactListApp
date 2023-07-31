@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PhotosUI
 
 final class DetailViewController: UIViewController {
 
@@ -22,6 +23,7 @@ final class DetailViewController: UIViewController {
         
         setupButtonAction()
         setupData()
+        setupTapGestures()
     }
     
     private func setupData() {
@@ -30,6 +32,38 @@ final class DetailViewController: UIViewController {
     
     func setupButtonAction() {
         detailView.saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+    }
+    
+    // MARK: - Set function when the imageView is pressed
+    
+    // Set the gesture(execute when the imageView is pressed)
+    func setupTapGestures() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(touchUpImageView))
+        detailView.mainImageView.addGestureRecognizer(tapGesture)
+        detailView.mainImageView.isUserInteractionEnabled = true
+    }
+    
+    @objc func touchUpImageView() {
+        print("ImageView is touched")
+        setupImagePicker()
+    }
+    
+    
+    func setupImagePicker() {
+        
+        // default setting, iOS 14.0 required!!!!!
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 0
+        configuration.filter = .any(of: [.images, .videos])
+        
+        // PickerViewController with default setting
+        let picker = PHPickerViewController(configuration: configuration)
+        
+        picker.delegate = self
+        
+        self.present(picker, animated: true, completion: nil)
+        
+        
     }
     
     @objc func saveButtonTapped() {
@@ -87,4 +121,29 @@ final class DetailViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
+}
+
+// 🤳 Let the user select the images of member from their Library
+extension DetailViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        // picker view dismiss
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        
+        if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self){ (image, error) in
+                
+                DispatchQueue.main.async {
+                    self.detailView.mainImageView.image = image as? UIImage
+                }
+                
+            }
+        } else {
+            print("Can't bring images source!")
+        }
+    }
+    
+    
 }
