@@ -14,6 +14,11 @@ final class ViewController: UIViewController {
     
     var memberListManager = MemberListManager()
     
+    lazy var plusButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusButtonTapped))
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -25,7 +30,7 @@ final class ViewController: UIViewController {
         setupTableViewConstraints()
     }
     
-    //if member's datas are updated, reload the view and implement those 
+    //if member's datas are updated, reload the view and implement those
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -59,8 +64,8 @@ final class ViewController: UIViewController {
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
-        // A button on the upper right of the NavBar
-        
+        // A button on the upper right of the NavBar (Plus Button)
+        self.navigationItem.rightBarButtonItem = self.plusButton
         
     }
     
@@ -77,7 +82,15 @@ final class ViewController: UIViewController {
         ])
     }
     
-    
+    // jump to another view to create(add) a member
+    @objc func plusButtonTapped(){
+        // jump to another view (it doesn't pass a data of members)
+        let detailVC = DetailViewController()
+        
+        // jump to another view
+        navigationController?.pushViewController(detailVC, animated: true)
+        
+    }
 
 }
 
