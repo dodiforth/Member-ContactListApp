@@ -18,7 +18,7 @@ final class MemberListManager {
             Member(name: "elonmusk", age: 52, phone: "+1-202-555-0162", address: "California"),
             Member(name: "jeffbezos", age: 59, phone: "+1-202-555-0163", address: "California"),
             Member(name: "joker", age: 44, phone: "+1-202-555-0164", address: "Gotham City"),
-            Member(name: "mortysanchez", age: 14, phone: "+1-202-555-0165", address: "Washington"),
+            Member(name: "mortysmith", age: 14, phone: "+1-202-555-0165", address: "Washington"),
             Member(name: "picklerick", age: 70, phone: "+1-202-555-0166", address: "Washington"),
             Member(name: "ricksanchez", age: 70, phone: "+1-202-555-0167", address: "Washington"),
             Member(name: "steve", age: 56, phone: "+1-202-555-0168", address: "California"),
