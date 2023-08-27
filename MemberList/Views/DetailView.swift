@@ -9,41 +9,32 @@ import UIKit
 
 class DetailView: UIView {
 
-    //MARK: - 멤버 저장속성 구현
-    // 멤버 데이터가 바뀌면 ===> didSet(속성감시자) 실행
-    // 속성감시자도 (저장 속성을 관찰하는) 어쨌든 자체는 메서드임
+    //MARK: - Handle each memeber's profile
+    // If the data's of memeber is changed ===> execute "didSet"
     var member: Member? {
         didSet {
             guard var member = member else {
-                // 멤버가 없으면 (즉, 새로운 멤버를 추가할때의 상황)
-                // 멤버가 없으면 버튼을 "SAVE"라고 셋팅
                 saveButton.setTitle("SAVE", for: .normal)
-                // 멤버가 없으면, 타입 저장 속성의 현재 숫자 가져오기
                 memberIdTextField.text = "\(Member.memberNumbers)"
                 return
             }
-            // 멤버가 있으면
             mainImageView.image = member.memberImage
             memberIdTextField.text = "\(member.memberId)"
             nameTextField.text = member.name
             phoneNumberTextField.text = member.phone
             addressTextField.text = member.address
             
-            // 나이항목 (옵셔널 정수형)
+            // Age of a member
             guard let age = member.age else {
-                // 나이 항목이 없으면 빈문자열로 표시
                 ageTextField.text = ""
                 return
             }
-            // 나이 항목이 있으면 정수 ==> 문자열 변환 표기
             ageTextField.text = "\(age)"
             
-            // 나이항목의 구현
-            //ageTextField.text = member.age != nil ? "\(member.age!)" : ""
         }
     }
     
-    //MARK: - UI구현
+    //MARK: - Configure UI
     
     let mainImageView: UIImageView = {
         let imageView = UIImageView()
@@ -54,7 +45,7 @@ class DetailView: UIView {
         return imageView
     }()
     
-    // 정렬을 깔끔하게 하기 위한 컨테이너뷰
+    // Container view to line up the views
     lazy var imageContainView: UIView = {
         let view = UIView()
         view.addSubview(mainImageView)
@@ -66,7 +57,8 @@ class DetailView: UIView {
     let memberIdLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "멤버번호:"
+        label.textAlignment = .right
+        label.text = "Noº :"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -97,7 +89,8 @@ class DetailView: UIView {
     let nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "이       름:"
+        label.textAlignment = .right
+        label.text = "Name :"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -127,7 +120,8 @@ class DetailView: UIView {
     let ageLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "나       이:"
+        label.textAlignment = .right
+        label.text = "Age :"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -157,7 +151,8 @@ class DetailView: UIView {
     let phoneNumberLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "전화번호:"
+        label.textAlignment = .right
+        label.text = "Phone :"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -186,8 +181,9 @@ class DetailView: UIView {
     
     let addressLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "주       소:"
+        label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.textAlignment = .right
+        label.text = "Address :"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -234,12 +230,12 @@ class DetailView: UIView {
         return stview
     }()
     
-    // 레이블 넓이 저장을 위한 속성
+    // Constant for label's width
     let labelWidth: CGFloat = 70
-    // 애니메이션을 위한 속성 선언
+    // Declaration for animation effect
     var stackViewTopConstraint: NSLayoutConstraint!
     
-    //MARK: - 생성자 셋팅
+    //MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -257,11 +253,10 @@ class DetailView: UIView {
         self.addSubview(stackView)
     }
     
-    //MARK: - 노티피케이션 셋팅
+    //MARK: - Notification
     
     func setupNotification() {
-        // 노티피케이션의 등록 ⭐️
-        // (OS차원에서 어떤 노티피케이션이 발생하는지 이미 정해져 있음)
+        // ⭐️
         NotificationCenter.default.addObserver(self, selector: #selector(moveUpAction), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(moveDownAction), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -270,9 +265,9 @@ class DetailView: UIView {
         memberIdTextField.delegate = self
     }
     
-    //MARK: - 오토레이아웃 셋팅
+    //MARK: - Configure Autolayout
     
-    // 오토레이아웃 업데이트
+    // Update Autolayout
     override func updateConstraints() {
         setConstraints()
         super.updateConstraints()
@@ -309,7 +304,7 @@ class DetailView: UIView {
         ])
     }
     
-    //MARK: - 키보드가 나타날때와 내려갈때의 애니메이션 셋팅
+    //MARK: - Animation configure for showing and hiding Keyboard
     
     @objc func moveUpAction() {
         stackViewTopConstraint.constant = -20
@@ -329,26 +324,24 @@ class DetailView: UIView {
         self.endEditing(true)
     }
     
-    //MARK: - 소멸자 구현
+    //MARK: - Deinit
     
     deinit {
-        // 노티피케이션의 등록 해제 (해제안하면 계속 등록될 수 있음) ⭐️
+        // Deinit Notification register! To avoid strong reference in memory⭐️
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }
 
-//MARK: - 텍스트필드 델리게이트 구현
+//MARK: - TextField Delegate
 
 extension DetailView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        // 멤버 아이디는 수정 못하도록 설정 (멤버아이디의 텍스트필드는 입력 안되도록 설정)
+        // Memeber's "Noº" TextField can't be edited or added by user!
         if textField == memberIdTextField {
             return false
         }
-        
-        // 나머지 텍스트필드는 관계없이 설정 가능
+        // Rest of the TextField can be edited by user
         return true
     }
 

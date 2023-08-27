@@ -30,7 +30,7 @@ final class ViewController: UIViewController {
         setupTableViewConstraints()
     }
     
-    //if member's datas are updated, reload the view and implement those
+    //if member's datas are updated, reload the view
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -40,16 +40,13 @@ final class ViewController: UIViewController {
     func setupTableView() {
         //❗️
         tableView.dataSource = self
-        
         tableView.delegate = self
-        
         tableView.rowHeight = 60
-        
         tableView.register(MyTableViewCell.self, forCellReuseIdentifier: "MemberCell")
     }
     
     func setupDatas() {
-        memberListManager.makeMembersListDatas() // If ther's a server then it requires to server side
+        memberListManager.makeMembersListDatas()
     }
     
     func setupNaviBar() {
@@ -86,9 +83,9 @@ final class ViewController: UIViewController {
     @objc func plusButtonTapped(){
         // jump to another view (it doesn't pass a data of members)
         let detailVC = DetailViewController()
-        
         // jump to another view
         navigationController?.pushViewController(detailVC, animated: true)
+        
         
     }
 
@@ -123,7 +120,7 @@ extension ViewController: UITableViewDelegate {
         //code which leads to another view
         let detailVC = DetailViewController()
         
-        //pass datas of selected member's info to the next view
+        //pass datas of selected member's info to the next view(Detail View)
         let array = memberListManager.getMemberList()
         detailVC.member = array[indexPath.row]
         

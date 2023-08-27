@@ -37,7 +37,7 @@ final class MemberListManager {
         memberList.append(member)
     }
     
-    // Update the info of a memeber already exist
+    // Update info of a memeber already existing
     func updateMemberInfo(index: Int, _ member: Member) {
         memberList[index] = member
     }

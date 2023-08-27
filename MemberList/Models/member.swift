@@ -27,7 +27,6 @@ struct Member {
     var phone: String?
     var address: String?
     
-    //memberwise init
     init(name: String?, age: Int?, phone: String?, address: String?) {
         
         self.memberId = Member.memberNumbers
@@ -36,7 +35,7 @@ struct Member {
         self.phone = phone
         self.address = address
         
-        //if user create a new member
+        //if user creates a new member
         Member.memberNumbers += 1
     }
 }

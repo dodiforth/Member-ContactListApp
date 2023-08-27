@@ -36,7 +36,7 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Set function when the imageView is pressed
     
-    // Set the gesture(execute when the imageView is pressed)
+    // Set the gesture(execute when the imageView is pressed) -> 제스쳐 !!!!
     func setupTapGestures() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(touchUpImageView))
         detailView.mainImageView.addGestureRecognizer(tapGesture)
@@ -44,13 +44,6 @@ final class DetailViewController: UIViewController {
     }
     
     @objc func touchUpImageView() {
-        print("ImageView is touched")
-        setupImagePicker()
-    }
-    
-    
-    func setupImagePicker() {
-        
         // default setting, iOS 14.0 required!!!!!
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 0
@@ -62,39 +55,34 @@ final class DetailViewController: UIViewController {
         picker.delegate = self
         
         self.present(picker, animated: true, completion: nil)
-        
-        
     }
     
     @objc func saveButtonTapped() {
-        print("Button is pressed")
+        print("save or update button is pressed")
         
-        // [1] 멤버가 없다면(새로운 멤버를 추가하는 화면)
+        // [1] If a memeber doesn't exist (or Save a new memeber profile)
         if member == nil {
-            //입력이 안되어 있다면 .. (일반적으로) 빈문자열로 저장
+            //No input leads to empty String ""
             let name = detailView.nameTextField.text ?? ""
             let age = Int(detailView.ageTextField.text ?? "")
             let phoneNumber = detailView.phoneNumberTextField.text ?? ""
             let address = detailView.addressTextField.text ?? ""
             
-            //새로운 멤버(구조체) 생성
+            //Create(Add) a new Member
             var newMember =
             Member(name: name, age: age, phone: phoneNumber, address: address)
             newMember.memberImage = detailView.mainImageView.image
             
-            // 1) 델리게이트 방식이 아닌 구현⭐️
+            // ⭐️
             let index = navigationController!.viewControllers.count - 2
-            // 전 화면에 접근하기 위함
+            // access to the previous view
             let vc = navigationController?.viewControllers[index] as! ViewController
-            // 전 화면의 모델에 접근해서 멤버를 추가
+            // access to the previous view and add a member
             vc.memberListManager.makeNewMember(newMember)
+            print("SAVE")
             
-            // 2) 델리게이트 방식으로 구현⭐️
-            // delegate?.addNewMember(newMember)
-            
-            // [2] 멤버가 있다면 (멤버의 내용을 업데이트 하기 위한 설정)
+            // [2] If a memeber exist (or Update a member's profile)
         } else {
-            // 이미지뷰에 있는 것을 그대로 다시 멤버에 저장
             member?.memberImage = detailView.mainImageView.image
             
             let memberId = Int(detailView.memberIdTextField.text!) ?? 0
@@ -103,21 +91,18 @@ final class DetailViewController: UIViewController {
             member!.phone = detailView.phoneNumberTextField.text ?? ""
             member!.address = detailView.addressTextField.text ?? ""
             
-            //뷰에도 바뀐 멤버를 전달 (뷰컨트롤러 ==> 뷰)
+            //Pass to the View memeber's changed status(profile) (View Controller ==> View)
             detailView.member = member
             
-            // 1) 델리게이트 방식이 아닌 구현⭐️
+            // ⭐️
             let index = navigationController!.viewControllers.count - 2
-            // 전 화면에 접근하기 위함
+            // access to the previous view
             let vc = navigationController?.viewControllers[index] as! ViewController
-            // 전 화면의 모델에 접근해서 멤버를 추가
+            // access to the previous view and update the member
             vc.memberListManager.updateMemberInfo(index: memberId, member!)
-            
-            // 2) 델리게이트 방식으로 구현⭐️
-            // delegate?.update(index: memberId, member!)
+            print("Update")
         }
-        
-        // (일처리를 다한 후에) 전화면으로 돌아가기
+        // After the task, Going back to the previous view(source view)
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -141,7 +126,7 @@ extension DetailViewController: PHPickerViewControllerDelegate {
                 
             }
         } else {
-            print("Can't bring images source!")
+            print("Can't bring images source!(or cancel changing image)")
         }
     }
     

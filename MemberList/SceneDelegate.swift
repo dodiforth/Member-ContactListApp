@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Create UINavigationController
         let naviVC = UINavigationController(rootViewController: ViewController())
         
-        // 기본루트뷰를 Navication컨트롤러로 설정⭐️⭐️⭐️
+        // ⭐️⭐️⭐️
         window?.rootViewController = naviVC
         window?.makeKeyAndVisible()
 
