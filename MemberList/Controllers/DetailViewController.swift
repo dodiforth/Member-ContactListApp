@@ -12,6 +12,10 @@ final class DetailViewController: UIViewController {
 
     private let detailView = DetailView()
     
+    //⭐️ To give control to DetailViewController
+    // "weak" to avoid Strong Reference Count
+    weak var delegate: MemeberDelegate?
+    
     var member: Member?
     
     override func loadView() {
@@ -73,13 +77,10 @@ final class DetailViewController: UIViewController {
             Member(name: name, age: age, phone: phoneNumber, address: address)
             newMember.memberImage = detailView.mainImageView.image
             
-            // ⭐️
-            let index = navigationController!.viewControllers.count - 2
-            // access to the previous view
-            let vc = navigationController?.viewControllers[index] as! ViewController
-            // access to the previous view and add a member
-            vc.memberListManager.makeNewMember(newMember)
-            print("SAVE")
+            delegate?.addNewMember(newMember)
+            
+            print("Save")
+
             
             // [2] If a memeber exist (or Update a member's profile)
         } else {
@@ -94,12 +95,8 @@ final class DetailViewController: UIViewController {
             //Pass to the View memeber's changed status(profile) (View Controller ==> View)
             detailView.member = member
             
-            // ⭐️
-            let index = navigationController!.viewControllers.count - 2
-            // access to the previous view
-            let vc = navigationController?.viewControllers[index] as! ViewController
-            // access to the previous view and update the member
-            vc.memberListManager.updateMemberInfo(index: memberId, member!)
+            delegate?.updateMember(index: memberId, member!)
+            
             print("Update")
         }
         // After the task, Going back to the previous view(source view)

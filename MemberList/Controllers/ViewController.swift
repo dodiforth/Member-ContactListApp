@@ -30,13 +30,6 @@ final class ViewController: UIViewController {
         setupTableViewConstraints()
     }
     
-    //if member's datas are updated, reload the view
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        tableView.reloadData()
-    }
-    
     func setupTableView() {
         //❗️
         tableView.dataSource = self
@@ -83,6 +76,9 @@ final class ViewController: UIViewController {
     @objc func plusButtonTapped(){
         // jump to another view (it doesn't pass a data of members)
         let detailVC = DetailViewController()
+        
+        detailVC.delegate = self
+        
         // jump to another view
         navigationController?.pushViewController(detailVC, animated: true)
         
@@ -120,11 +116,26 @@ extension ViewController: UITableViewDelegate {
         //code which leads to another view
         let detailVC = DetailViewController()
         
+        detailVC.delegate = self
+        
         //pass datas of selected member's info to the next view(Detail View)
-        let array = memberListManager.getMemberList()
-        detailVC.member = array[indexPath.row]
+        let currentMember = memberListManager.getMemberList()[indexPath.row]
+        detailVC.member = currentMember
         
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
+}
+
+// Custom Delegate
+extension ViewController: MemeberDelegate {
+    func addNewMember(_ member: Member) {
+        memberListManager.makeNewMember(member)
+        tableView.reloadData()
+    }
+    
+    func updateMember(index: Int, _ member: Member) {
+        memberListManager.updateMemberInfo(index: index, member)
+        tableView.reloadData()
+    }
 }
